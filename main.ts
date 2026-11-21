@@ -9,6 +9,14 @@ import { mkdirSync, writeFileSync } from "node:fs";
 const JOKE =
   "When the demo crashed, my agent rolled back to the last working version — the slide that says 'Coming soon.'";
 
+// Gate: the entry must be 1–280 characters, counted as Unicode code
+// points. Fail loudly here rather than writing an entry the sealed
+// scorer would refuse (108 characters at the time of writing).
+const jokeLength = [...JOKE].length;
+if (jokeLength < 1 || jokeLength > 280) {
+  throw new Error(`entry.txt would be ${jokeLength} characters, outside the 1–280 gate`);
+}
+
 // The grader runs this in a sandbox and reads /output/entry.txt.
 // Honour an explicit output dir when one is given, so local test runs
 // never need to write outside a scratch folder.
